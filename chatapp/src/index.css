@@ -1,0 +1,21 @@
+html, body, #root, .App {
+  height: 100% !important;
+}
+
+.loginComponent {
+  height: 100%;
+  background: #5433FF;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #A5FECB, #20BDFF, #5433FF);
+  background: linear-gradient(to right, #A5FECB, #20BDFF, #5433FF);
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.paper {
+  padding: 20px;
+  margin: 10px;
+}
