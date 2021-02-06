@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-export default instance = axios.create({
-    baseURL: 'http://localhost',
+const instance = axios.create({
+    baseURL: 'http://localhost:2999',
     timeout: 1000,
     headers: {'Content-Type': 'application/json'}
 });
+
+export default instance;

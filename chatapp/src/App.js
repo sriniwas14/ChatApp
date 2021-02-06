@@ -18,7 +18,7 @@ function App() {
         })
       }
     })
-  }, [])
+  }, [loading])
 
   if(loading){
     return (
@@ -31,7 +31,7 @@ function App() {
       <div className="App">
         {
           loginDetails.loggedIn ? (<Dashboard />) : (
-            <Login setLoginDetails={setLoginDetails} />
+            <Login setLoading={setLoading} />
           )
         }
       </div>

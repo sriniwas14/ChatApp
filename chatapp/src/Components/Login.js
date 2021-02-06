@@ -1,9 +1,25 @@
 import { Container, Grid, Paper, TextField, Link, Button, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
+import api from '../utils/api'
 
-export default function Login() {
+export default function Login(props) {
     const [username, setUsername] = useState("")
-    const [Password, setPassword] = useState("")
+    const [password, setPassword] = useState("")
+
+    const loginUser = () => {
+        api.post('/users/login', {
+            username,
+            password
+        }).then((responce)=>{
+            if(responce.data.success){
+                localStorage.setItem("token", responce.data.token)
+                props.setLoading(true)
+            }
+        }).catch((err)=> {
+            console.log("Err ", err)
+        })
+    }
+
     return (
         <div className="loginComponent">
             <Container>
@@ -20,11 +36,11 @@ export default function Login() {
                             </div>
                             <br/>
                             <div>
-                                <TextField onChange={(e)=> setPassword(e.target.value)} fullWidth id="filled-basic" label="Password" variant="outlined" />
+                                <TextField onChange={(e)=> setPassword(e.target.value)} fullWidth type="password" id="filled-basic" label="Password" variant="outlined" />
                             </div>
                             <br />
                             <div>
-                                <Button fullWidth style={{ marginBottom: 10 }} size="large" variant="contained" color="primary">
+                                <Button fullWidth onClick={()=> loginUser()} style={{ marginBottom: 10 }} size="large" variant="contained" color="primary">
                                     Sign In
                                 </Button>
                                 <Button fullWidth variant="contained" size="large" color="secondary">

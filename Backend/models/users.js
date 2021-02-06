@@ -55,8 +55,8 @@ exports.loginUser = async (body, callback) => {
     delete result[0].password
 
     if(passwordResult===true){
-        verifyKey(body.token)
-        callback({ success: true }, signKey({ ...result[0]}))
+        let token = signKey({ ...result[0]})
+        callback({ success: true, token }, token)
     } else {
         callback({ success: false, err: "mismatch" })
     }
