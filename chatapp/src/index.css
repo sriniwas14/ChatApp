@@ -19,3 +19,8 @@ body {
   padding: 20px;
   margin: 10px;
 }
+
+
+.MuiInput-underline::after,.MuiInput-underline::before {
+  border-bottom: 0 !important;
+}
