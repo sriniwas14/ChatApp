@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { Drawer, CssBaseline, IconButton, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemText, ListItemIcon, TextField, Input } from '@material-ui/core';
+import { Drawer, CssBaseline, IconButton, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemText, ListItemIcon, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { MoveToInbox, Mail, Menu, Send } from '@material-ui/icons';
 import ChatBubble from './Elements/ChatBubble';
+import getSocketInstance from '../utils/socket'
 
 
 const drawerWidth = 350;
@@ -52,13 +53,32 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Dashboard() {
+export default function Dashboard(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [messages, setMessages] = useState([])
+    const socket = getSocketInstance()
+
+    const chatInput = useRef()
 
     const toggleDrawerOpen = () => {
         setOpen(!open);
     };
+
+    useEffect(() => {
+      socket.on('chat message', (message)=> {
+        setMessages([message])
+      })
+    }, [])
+
+    let sendMessage = () => {
+      socket.emit('chat message', {
+        from: props.userDetails.token,
+        nickname: "niko",
+        message: chatInput.current.value
+      })
+      chatInput.current.value = ""
+    }
 
     return (
       <div className={classes.root}>
@@ -115,18 +135,16 @@ export default function Dashboard() {
         })}>
           <div className={classes.toolbar} />
           <div className={classes.messagesContainer}>
-            <ChatBubble self={true} text="Hello There!" />
-            <ChatBubble self={true} text="Hello There!" />
-            <ChatBubble self={true} text="Hello There!" />
-            <ChatBubble self={true} text="Hello There!" />
-            <ChatBubble self={false} text="Hello There!" />
+            {
+              messages.map(message => <ChatBubble self={true} text={message.message} />)
+            }
           </div>
         </main>
         <AppBar position="fixed" color="white" className={classes.appBarBottom}>
         <Toolbar>
           <div className={classes.grow} />
-          <Input style={{ borderBottom: 0 }} fullWidth placeholder="Type Your Message..." inputProps={{ 'aria-label': 'description' }} />
-          <IconButton color="primary">
+          <Input inputRef={chatInput} style={{ borderBottom: 0 }} fullWidth placeholder="Type Your Message..." inputProps={{ 'aria-label': 'description' }} />
+          <IconButton color="primary" onClick={sendMessage}>
             <Send />
           </IconButton>
         </Toolbar>

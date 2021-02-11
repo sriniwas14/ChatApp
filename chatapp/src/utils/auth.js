@@ -5,6 +5,7 @@ export let authCheck = (callback) => {
 
     if(token){
         const decodedToken = jwtDecode(token)
+        decodedToken.token = token
         callback(true, decodedToken)
         return
     } else {

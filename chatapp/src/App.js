@@ -30,7 +30,7 @@ function App() {
     return (
       <div className="App">
         {
-          loginDetails.loggedIn ? (<Dashboard />) : (
+          loginDetails.loggedIn ? (<Dashboard userDetails={loginDetails.userDetails}/>) : (
             <Login setLoading={setLoading} />
           )
         }
