@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Drawer, CssBaseline, IconButton, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemText, ListItemIcon, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
 import { MoveToInbox, Mail, Menu, Send } from '@material-ui/icons';
-import ChatBubble from './Elements/ChatBubble';
+import ChatContainer from './Elements/ChatContainer';
 import getSocketInstance from '../utils/socket'
 
 
@@ -40,14 +40,6 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: -drawerWidth,
   },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-    marginRight: -drawerWidth
-  },
   messagesContainer: {
     display: "column-reverse"
   }
@@ -55,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState([])
     const socket = getSocketInstance()
 
@@ -67,7 +59,7 @@ export default function Dashboard(props) {
 
     useEffect(() => {
       socket.on('chat message', (message)=> {
-        setMessages([message])
+        setMessages((messages) => [...messages, message])
       })
     }, [])
 
@@ -130,14 +122,10 @@ export default function Dashboard(props) {
             ))}
           </List>
         </Drawer>
-        <main className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}>
+        <main className={classes.content}>
           <div className={classes.toolbar} />
           <div className={classes.messagesContainer}>
-            {
-              messages.map(message => <ChatBubble self={true} text={message.message} />)
-            }
+            <ChatContainer messages={messages} />
           </div>
         </main>
         <AppBar position="fixed" color="white" className={classes.appBarBottom}>
