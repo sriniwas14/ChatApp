@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import clsx from 'clsx';
 import { Drawer, CssBaseline, IconButton, AppBar, Toolbar, List, Typography, Divider, ListItem, ListItemText, ListItemIcon, Input } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core';
-import { MoveToInbox, Mail, Menu, Send } from '@material-ui/icons';
+import { MoveToInbox, Mail, Send } from '@material-ui/icons';
 import ChatContainer from './Elements/ChatContainer';
+import TopAppBar from './Elements/TopAppBar';
 import getSocketInstance from '../utils/socket'
+import withAuth from '../withAuth';
 
 
 const drawerWidth = 350;
@@ -13,10 +14,17 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
+  grow: {
+    flexGrow: 1
+  },
   appBar: {
     width: `100%`,
     zIndex: theme.zIndex.drawer + 1,
     marginLeft: drawerWidth,
+  },
+  appBarButton:{
+    color: "white",
+    textTransform: "capitalize"
   },
   appBarBottom: {
     top: 'auto',
@@ -40,12 +48,15 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: -drawerWidth,
   },
+  messageBoxContainer:{
+    display: "contents"
+  },
   messagesContainer: {
     display: "column-reverse"
   }
 }));
 
-export default function Dashboard(props) {
+function Dashboard(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState([])
@@ -63,34 +74,23 @@ export default function Dashboard(props) {
       })
     }, [])
 
-    let sendMessage = () => {
-      socket.emit('chat message', {
-        from: props.userDetails.token,
-        nickname: "niko",
-        message: chatInput.current.value
-      })
-      chatInput.current.value = ""
+    let sendMessage = (e) => {
+      e.preventDefault()
+      let message = chatInput.current.value
+      if(message.length>0){
+        socket.emit('send message', {
+          from: message,
+          nickname: props.userDetails.nickname,
+          message: chatInput.current.value
+        })
+        chatInput.current.value = ""
+      }
     }
 
     return (
       <div className={classes.root}>
         <CssBaseline />
-        <AppBar position="fixed" className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={toggleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, open && classes.hide)}
-            >
-                <Menu />
-            </IconButton>
-            <Typography variant="h6" noWrap>
-              ChatApp
-            </Typography>
-          </Toolbar>
-        </AppBar>
+        <TopAppBar classes={classes} toggleDrawer={toggleDrawerOpen} />
         <Drawer
           className={classes.drawer}
           variant="persistent"
@@ -131,12 +131,16 @@ export default function Dashboard(props) {
         <AppBar position="fixed" color="white" className={classes.appBarBottom}>
         <Toolbar>
           <div className={classes.grow} />
-          <Input inputRef={chatInput} style={{ borderBottom: 0 }} fullWidth placeholder="Type Your Message..." inputProps={{ 'aria-label': 'description' }} />
-          <IconButton color="primary" onClick={sendMessage}>
-            <Send />
-          </IconButton>
+          <form className={classes.messageBoxContainer} onSubmit={sendMessage}>
+            <Input inputRef={chatInput} style={{ borderBottom: 0 }} fullWidth placeholder="Type Your Message..." inputProps={{ 'aria-label': 'description' }} />
+            <IconButton type="submit" color="primary">
+              <Send />
+            </IconButton>
+          </form>
         </Toolbar>
       </AppBar>
       </div>
     );
 }
+
+export default withAuth(Dashboard)
