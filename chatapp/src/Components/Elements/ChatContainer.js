@@ -3,10 +3,10 @@ import ChatBubble from './ChatBubble';
 
 export default function ChatContainer(props) {
     useEffect(() => {
-        console.log("Messages : ", JSON.stringify(props.messages))
+        window.scrollTo(0, document.body.scrollHeight)
     }, [props.messages])
     return (
-        <div>
+        <div style={{ marginBottom:78 }}>
             {
               props.messages.map(message => <ChatBubble self={true} text={message.message} />)
             }
