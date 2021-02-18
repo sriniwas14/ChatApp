@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Dashboard from './Components/Dashboard';
 import Login from "./Components/Login";
-import { authCheck } from './utils/auth'
+import { authCheck } from './utils/auth';
+import AuthContext from './AuthConext';
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -29,11 +30,16 @@ function App() {
   } else {
     return (
       <div className="App">
+        <AuthContext.Provider value={{ 
+            userDetails: loginDetails.userDetails,
+            setLoginDetails
+         }}>
         {
-          loginDetails.loggedIn ? (<Dashboard userDetails={loginDetails.userDetails}/>) : (
+          loginDetails.loggedIn ? (<Dashboard />) : (
             <Login setLoading={setLoading} />
           )
         }
+        </AuthContext.Provider>
       </div>
     );
   }

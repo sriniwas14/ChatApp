@@ -3,8 +3,7 @@ exports.chatSocket = (app) => {
     io.sockets.on('connection', (socket) => {
         console.log("New User Connected!")
 
-        socket.on('chat message', (msg) => {
-            console.log("MSG : ", msg)
+        socket.on('send message', (msg) => {
             io.emit('chat message', msg);
         });
     })
