@@ -2,6 +2,8 @@ import { Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import LoginForm from "./LoginForm";
+import { StepsForm, Step } from "./Elements/StepsForm";
+import RegisterForm from "./RegisterForm";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,7 +51,7 @@ export default function Login(props) {
               setLoginView={setLoginView}
             />
           ) : (
-            <b>Register</b>
+            <RegisterForm />
           )}
         </Paper>
       </Grid>
