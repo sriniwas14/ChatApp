@@ -69,6 +69,11 @@ function Dashboard(props) {
     };
 
     useEffect(() => {
+      // Initiate Handshake
+      socket.emit('handshake', {
+        email: props.userDetails.username
+      })
+
       socket.on('chat message', (message)=> {
         setMessages((messages) => [...messages, message])
       })
@@ -79,8 +84,8 @@ function Dashboard(props) {
       let message = chatInput.current.value
       if(message.length>0){
         socket.emit('send message', {
-          from: message,
-          nickname: props.userDetails.nickname,
+          from: props.userDetails.username,
+          recepientId: 'nick@fury.com',
           message: chatInput.current.value
         })
         chatInput.current.value = ""
