@@ -1,11 +1,13 @@
-const { registerUser, loginUser, isValidUser, resetPassword } = require('../models/users');
+const { registerUser, getUsers, loginUser, isValidUser, resetPassword } = require('../models/users');
 const { sendMail } = require('../utils/mail');
 const { signKey, verifyKey } = require('../utils/tokens');
 
 const userRoutes = require('express').Router();
 
 userRoutes.get('/', (req, res)=> {
-    res.send("Hello World From User")
+    getUsers(req.query['search'], (result) => {
+        res.send(result)
+    });
 });
 
 userRoutes.post('/register', (req, res) => {
