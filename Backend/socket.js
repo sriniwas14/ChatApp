@@ -1,4 +1,4 @@
-const { sendChatRequest, saveMessage } = require("./models/chat")
+const { startNewChat, saveMessage } = require("./models/chat")
 
 const sendMessage = (io, chatId, socketId, msg) => {
     if (socketId) {
@@ -8,7 +8,7 @@ const sendMessage = (io, chatId, socketId, msg) => {
     saveMessage({
         chatId,
         message: msg.message,
-        messageFrom: msg.from,
+        messageFrom: msg.from,  
     })
 }
 
@@ -33,12 +33,12 @@ exports.chatSocket = (app) => {
 
             // Check if users are connected, if they are add `connected: true` to the messages
             if(!msg.connected){
-                sendChatRequest({
-                    participants: `${msg.recepientId}:${msg.from}`,
+                startNewChat({
+                    participants: { to: msg.recepientId, from: msg.from },
                     accepted: false
-                }, (success, chatId) => {
-                    
-                    sendMessage(io, chatId, socketId, msg)
+                }, (success, chatId) => { 
+                    if(success)
+                        sendMessage(io, chatId, socketId, msg)
                 })
                 return
             }
