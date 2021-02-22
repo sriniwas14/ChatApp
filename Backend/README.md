@@ -1,39 +1,122 @@
-# NodeJS_Express_API_Boilerplate
-An Express RestAPI Boilerplace with JWT Based User Creation and Authentication
 
-## Introduction
-As the name implies this application is a boilerplace that I use to get started with creating an API for my Web Applications
+# Chat App API Documentation 
 
-## Features
-* User Account Creation
-* Login With JWT
-* Forgot Password with SMTP sendmail
+### Introduction
 
-## Getting Started
-To get started create a mysql database and populate that with the `databaseSchema` that is provided in this repo.
+This document will guide you through the process of creating an application using the ChatApp Api. The Document is arranged in two distinct sections, namely -  
 
-For setting up the environment variables you can rename the provided `envSample` file to `.env` and then modify it according to your needs.
+* Structure - Understand how the code is arranged in order to modify it
+* Endpoints - Use the provided Endpoints in your own application
 
+### Structure
+#### Introduction
 
-## Environment Variables
-This section provides an introduction to the environment variables we are using in this application
+This section will help you get starting with extending the API by explaining the design patterns and the function of each directory.
 
-|Name| Value|
-|----|----|
-|PORT| The Port on which this app will run on|
-|JWT_KEY | The JWT Secret Key|
-|JWT_EXPIRATION | For how long will the Key be valid|
-| MAIL_USER | SMTP mail username |
-| MAIL_PASS | SMTP mail password |
-| MAIL_FROM | The name of the account which will appear on the sent email |
-| SITE_URL | The URL for the Site it will be hosted on |
-| DB_HOST | Hostname for the Database |
-| DB_NAME | Name of the Database |
-| DB_USER | Username for the Database |
-| DB_PASS | Password for the Database | 
+#### File Structure
 
-## Need Help?
+	/backend
+	 - routes
+	 - models
+	 - middlewares
+	 - utils
+	 - socket.js
+	 - index.js
 
-1. [Express JS](https://www.npmjs.com/package/express)
-2. [JWT](https://www.npmjs.com/package/jsonwebtoken)
-3. [Bcrypt](https://www.npmjs.com/package/bcrypt)
+#### Routes
+This folder contains the files for the routes middlewares.
+
+#### Middlewares
+Here's where all the custom middlewares are kept
+
+#### Utils
+This directory is meant to store small one off functions, such as the function which generates and verifies the jwt token.
+#### Socket.js
+This file is responsible managing all the socket connections.
+### Endpoints
+
+#### Endpoint URI : /users
+
+##### Search or List Users
+```
+// Resource URL : /
+// Searches the users based upon the query if it's empty just a list of users is passed
+	
+METHOD: GET
+HEADERS: Content-Type -> application/json
+QUERYPARAMS: search
+BODY: null
+RETURNS: {
+	[users]
+}
+```
+##### Register New User
+```
+// Resource URL : /register
+// Creates a new User
+	
+METHOD: POST
+HEADERS: Content-Type -> application/json
+QUERYPARAMS: null
+BODY: {
+	username,
+	password,
+	first_name,
+	last_name,
+	nickname,
+	profile_pic,
+	header_pic,
+	dob,
+	phone,
+	bio
+}
+RETURNS: {
+	success : true | false
+}
+```
+##### Login User
+```
+// Resource URL : /login
+// Sets the JWT token in the cookie if authentication is successful
+	
+METHOD: POST
+HEADERS: Content-Type -> application/json
+QUERYPARAMS: null
+BODY: {
+	username,
+	password
+}
+RETURNS: {
+	success : true | false
+}
+```
+##### Forgot Password
+```
+// Resource URL : /forgotpassword
+// Sends an E-email containing the link to reset the password
+	
+METHOD: POST
+HEADERS: Content-Type -> application/json
+QUERYPARAMS: null
+BODY: {
+	username
+}
+RETURNS: {
+	success : true | false
+}
+```
+##### Reset Password
+```
+// Resource URL : /resetpassword
+// Sets the Password
+	
+METHOD: POST
+HEADERS: Content-Type -> application/json
+QUERYPARAMS: null
+BODY: {
+	password
+}
+RETURNS: {
+	success : true | false
+}
+```
