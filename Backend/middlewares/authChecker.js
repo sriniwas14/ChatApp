@@ -2,6 +2,13 @@ const { verifyKey } = require("../utils/tokens")
 
 let pathExceptions = ['login', 'register', 'forgotpassword', 'resetpassword']
 
+const getAuthToken = (req) => {
+    const authrorizationHeader = req.headers['authorization']
+    if (!authrorizationHeader) return
+    const token = authrorizationHeader.split(' ')[1]
+    return token
+}
+
 exports.authChecker = (req, res, next) => {
     for (path of pathExceptions){
         if (req.path.search(path)!==-1){
@@ -9,13 +16,14 @@ exports.authChecker = (req, res, next) => {
             return
         }
     }
-    token = req.cookies.token
-    if(token) {
-        if(verifyKey(token)){
-            next()
-        } else {
-            res.status(401).send()
-        }
-    }
-    
+    const token = getAuthToken(req)
+    if(!token){ 
+        res.status(401).send()
+        return
+    }   
+    if(verifyKey(token)){
+        next()
+    } else {
+        res.status(401).send()
+    }    
 }
