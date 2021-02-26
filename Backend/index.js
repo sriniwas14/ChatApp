@@ -5,6 +5,7 @@ const userRoutes = require('./routes/users')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const { authChecker } = require('./middlewares/authChecker')
+const chatRoutes = require("./routes/chat")
 const app = express()
 const port = process.env.PORT
 let server = app.listen(port, () => {
@@ -26,5 +27,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/users/', userRoutes)
+app.use('/chats/', chatRoutes)
 
 

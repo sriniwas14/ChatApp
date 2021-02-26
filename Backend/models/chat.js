@@ -29,3 +29,13 @@ exports.acceptChatRequest = async (username, callback) => {
         callback(false)
     }
 }
+
+exports.getAllChats = async (from, callback) => {
+    let result = await runQuery('SELECT * FROM rooms as rm INNER JOIN participants as p ON rm.id=p.roomId WHERE rm.id IN (SELECT roomId FROM participants WHERE username=?) AND p.username!=?', [from, from])
+
+    if(result.length>0){
+        callback(result)
+    } else {
+        callback(false)
+    }
+}

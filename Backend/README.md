@@ -77,7 +77,7 @@ RETURNS: {
 ##### Login User
 ```
 // Resource URL : /login
-// Sets the JWT token in the cookie if authentication is successful
+// Generates and return a jwt token which can be passed as a bearer token
 	
 METHOD: POST
 HEADERS: Content-Type -> application/json
