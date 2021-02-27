@@ -106,7 +106,6 @@ function ChatView(props) {
   return (
     <div className={classes.root}>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
         <div className={classes.messagesContainer}>
           <ChatContainer messages={messages} />
         </div>

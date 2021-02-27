@@ -15,7 +15,7 @@ export default function App() {
     <Router>
       <div>
         <TopAppBar />
-
+        <div style={{ marginTop: 64 }}>
         <Switch>
           <Route exact path="/">
             <Inbox />
@@ -27,6 +27,7 @@ export default function App() {
             <Profile />
           </Route>
         </Switch>
+        </div>
       </div>
     </Router>
   );
