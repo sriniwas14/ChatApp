@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Routes from './Routes';
 import Login from "./Components/Login";
 import { authCheck } from './utils/auth';
-import AuthContext from './Context/AuthContext';
+import DataContext from './Context/DataContext';
 
 function App() {
   const [loading, setLoading] = useState(true)
   const [loginDetails, setLoginDetails] = useState({ loggedIn : false })
+  const [selectedChat, setSelectedChat] = useState({})
 
   useEffect(() => {
     authCheck((status, token) => {
@@ -30,16 +31,18 @@ function App() {
   } else {
     return (
       <div className="App">
-        <AuthContext.Provider value={{ 
+        <DataContext.Provider value={{ 
             userDetails: loginDetails.userDetails,
-            setLoginDetails
+            setLoginDetails,
+            selectedChat,
+            setSelectedChat
          }}>
         {
           loginDetails.loggedIn ? (<Routes />) : (
             <Login setLoading={setLoading} />
           )
         }
-        </AuthContext.Provider>
+        </DataContext.Provider>
       </div>
     );
   }

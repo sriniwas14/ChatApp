@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
     const classes = useStyles();
-    const [recepientDetails, setRecepientDetails] = useState({})
 
   return (
     <Router>
@@ -68,11 +67,11 @@ export default function App() {
         <TopAppBar classes={classes} />
 
         <Switch>
-          <Route path="/">
-            <Inbox setRecepient={setRecepientDetails} />
+          <Route exact path="/">
+            <Inbox />
           </Route>
-          <Route path="/chat">
-            <ChatView recepient={recepientDetails} />
+          <Route exact path="/chat">
+            <ChatView />
           </Route>
         </Switch>
       </div>

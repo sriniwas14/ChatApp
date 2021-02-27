@@ -1,7 +1,7 @@
 import React from 'react'
 import { Menu, MenuItem, AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
-import withAuth from '../../Context/withAuth';
+import withAuth from '../../Context/withData';
 
 function TopAppBar(props) {
     let classes = props.classes

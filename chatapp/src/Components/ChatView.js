@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
 import ChatContainer from "./Elements/ChatContainer";
 import getSocketInstance from "../utils/socket";
-import withAuth from "../Context/withAuth";
+import withAuth from "../Context/withData";
 import api from "../utils/api";
 
 const drawerWidth = 350;
@@ -74,11 +74,11 @@ function ChatView(props) {
     });
 
     // Fetch Messages
-    api.get(`/chats/${props.recepient.chatId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
+    api.get(`/chats/${props.selectedChat.chatId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
     .then(result => {
       setMessages((messages) => [...result.data, ...messages])
     }).catch(err => {
-      console.log("Couldn't Fetch Messages!")
+      console.log("Couldn't Fetch Messages!", err)
     })
 
     socket.on("chat message", (message) => {
@@ -90,9 +90,9 @@ function ChatView(props) {
     e.preventDefault();
     let message = chatInput.current.value;
     const chatMessage = {
-      chatId:props.recepient.chatId,
+      chatId:props.selectedChat.chatId,
       messageFrom: props.userDetails.username,
-      recepientId: props.recepient.username,
+      recepientId: props.selectedChat.username,
       message: chatInput.current.value,
     };
 

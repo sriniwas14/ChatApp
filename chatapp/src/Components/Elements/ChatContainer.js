@@ -1,5 +1,5 @@
 import React,{ useEffect } from 'react'
-import withAuth from '../../Context/withAuth';
+import withAuth from '../../Context/withData';
 import ChatBubble from './ChatBubble';
 
 function ChatContainer(props) {
