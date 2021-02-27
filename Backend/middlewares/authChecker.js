@@ -20,8 +20,10 @@ exports.authChecker = (req, res, next) => {
     if(!token){ 
         res.status(401).send()
         return
-    }   
-    if(verifyKey(token)){
+    }  
+    const decodedToken = verifyKey(token) 
+    if(decodedToken){
+        req.token = decodedToken
         next()
     } else {
         res.status(401).send()

@@ -39,3 +39,33 @@ exports.getAllChats = async (from, callback) => {
         callback(false)
     }
 }
+
+exports.chatConnectionExists = async (users, callback)=> {
+    let result = await runQuery('SELECT COUNT(*) as participantCount FROM `participants` WHERE username=? OR username=? GROUP BY roomId ORDER BY participantCount DESC LIMIT 1', [users[0], users[1]])
+
+    if(result.length>0){
+        callback(true)
+    } else {
+        callback(false)
+    }
+}
+
+
+
+exports.getChatMessages = async (chatId, username, callback) => {
+    let roomsHasThisUser = await runQuery('SELECT * FROM rooms as rm INNER JOIN participants as p ON rm.id=p.roomId WHERE rm.id=? AND p.username=?', [chatId, username])
+    
+    if(roomsHasThisUser.length<=0) {
+        callback(false)
+        return
+    }
+    
+    let result = await runQuery('SELECT * FROM `chat_messages` WHERE chatId=? ORDER BY sentAt', [chatId])
+    
+    if(result.length>0){
+        callback(result)
+    } else {
+        callback(false)
+    }
+    
+}

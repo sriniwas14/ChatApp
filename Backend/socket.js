@@ -1,4 +1,4 @@
-const { startNewChat, saveMessage } = require("./models/chat")
+const { startNewChat, saveMessage, chatConnectionExists } = require("./models/chat")
 
 const sendMessage = (io, chatId, socketId, msg) => {
     if (socketId) {
@@ -8,7 +8,7 @@ const sendMessage = (io, chatId, socketId, msg) => {
     saveMessage({
         chatId,
         message: msg.message,
-        messageFrom: msg.from,  
+        messageFrom: msg.messageFrom,  
     })
 }
 
@@ -31,18 +31,23 @@ exports.chatSocket = (app) => {
         socket.on('send message', (msg) => {
             const socketId = connections[msg.recepientId]
 
-            // Check if users are connected, if they are add `connected: true` to the messages
-            if(!msg.connected){
-                startNewChat({
-                    participants: { to: msg.recepientId, from: msg.from },
-                    accepted: false
-                }, (success, chatId) => { 
-                    if(success)
-                        sendMessage(io, chatId, socketId, msg)
-                })
-                return
-            }
-            sendMessage(io, msg.chatId, socketId, msg)
+            // Get Chat Id 
+            chatConnectionExists([msg.from, msg.recepientId], (success )=> {
+                // On Failure Create New Chat
+                if(!success){
+                    startNewChat({
+                        participants: { to: msg.recepientId, from: msg.from },
+                        accepted: false
+                    }, (success, chatId) => { 
+                        if(success)
+                            sendMessage(io, chatId, socketId, msg)
+                    })
+                    return
+                }
+                sendMessage(io, msg.chatId, socketId, msg)
+            })
+
+            
         });
     })
 }
