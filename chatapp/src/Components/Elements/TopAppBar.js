@@ -1,19 +1,83 @@
-import React from 'react'
-import { Menu, MenuItem, AppBar, Toolbar, Typography, Button } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
-import withAuth from '../../Context/withData';
+import React, { useState, useEffect } from 'react'
+import { Menu, MenuItem, AppBar, Toolbar, Typography, Button, IconButton } from '@material-ui/core';
+import { AccountCircle, ArrowBack } from '@material-ui/icons';
+import { makeStyles } from "@material-ui/core";
+import { useLocation, useHistory } from 'react-router-dom';
+import withData from '../../Context/withData';
+
+let drawerWidth = 200
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "inline",
+    },
+    grow: {
+      flexGrow: 1,
+    },
+    appBar: {
+      width: `100%`,
+      zIndex: theme.zIndex.drawer + 1
+    },
+    appBarButton: {
+      color: "white",
+      textTransform: "capitalize",
+    },
+    appBarBottom: {
+      top: "auto",
+      bottom: 0,
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      })
+    },
+    messageBoxContainer: {
+      display: "contents",
+    },
+    messagesContainer: {
+      display: "column-reverse",
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+    },
+    title: {
+      flexGrow: 1,
+    }
+  }));
+
 
 function TopAppBar(props) {
-    let classes = props.classes
-    const [anchorEl, setAnchorEl] = React.useState(null);
+    let location = useLocation();
+    let history = useHistory();
+
+    const classes = useStyles();
+    const [backButtonVisible, setBackButtonVisible] = useState(false)
+    const [title, setTitle] = useState("Inbox")
+    const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
   
     const handleMenu = (event) => {
       setAnchorEl(event.currentTarget);
     };
+
+    useEffect(() => {
+      switch(location.pathname){
+        case '/chat':
+          setBackButtonVisible(true)
+          setTitle(props.selectedChat.username)
+          break;     
+        default:
+          setBackButtonVisible(false)
+          setTitle("Inbox")
+      }
+    }, [location])
   
     const handleClose = (e) => {
-      console.log("A")
       switch(e.target.innerText){
         case "Profile": 
           break;
@@ -28,12 +92,16 @@ function TopAppBar(props) {
 
     return (
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <div className={classes.grow}>
-            <Typography variant="h6" noWrap>
-              ChatApp
+        <Toolbar className={classes.toolbar}>
+          {
+            backButtonVisible ? (<IconButton onClick={() => history.push('/') } edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+            <ArrowBack />
+          </IconButton>) : ''
+          }
+            
+            <Typography variant="h6" className={classes.title} noWrap>
+              { title }
             </Typography>
-          </div>
           { /** User Menu  **/ }
           <Button className={classes.appBarButton} color="primary" onClick={handleMenu}>
             <AccountCircle />
@@ -62,4 +130,4 @@ function TopAppBar(props) {
     )
 }
 
-export default withAuth(TopAppBar);
+export default withData(TopAppBar);
