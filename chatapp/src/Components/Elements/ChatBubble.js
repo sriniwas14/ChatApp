@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 10,
         padding: 15,
         maxWidth: '75%',
+        borderRadius: "10px 10px 10px 0px",
         display: 'inline-block'
     }
 }));

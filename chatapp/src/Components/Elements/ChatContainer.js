@@ -1,15 +1,18 @@
 import React,{ useEffect } from 'react'
+import withAuth from '../../withAuth';
 import ChatBubble from './ChatBubble';
 
-export default function ChatContainer(props) {
+function ChatContainer(props) {
     useEffect(() => {
         window.scrollTo(0, document.body.scrollHeight)
     }, [props.messages])
     return (
         <div style={{ marginBottom:78 }}>
             {
-              props.messages.map(message => <ChatBubble self={true} text={message.message} />)
+              props.messages.map(message => <ChatBubble self={props.userDetails.username===message.from ? true : false } text={message.message} />)
             }
         </div>
     )
 }
+
+export default withAuth(ChatContainer)
