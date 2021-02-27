@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Dashboard from './Components/Dashboard';
+import Routes from './Routes';
 import Login from "./Components/Login";
 import { authCheck } from './utils/auth';
-import AuthContext from './AuthConext';
+import AuthContext from './Context/AuthContext';
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -35,7 +35,7 @@ function App() {
             setLoginDetails
          }}>
         {
-          loginDetails.loggedIn ? (<Dashboard />) : (
+          loginDetails.loggedIn ? (<Routes />) : (
             <Login setLoading={setLoading} />
           )
         }

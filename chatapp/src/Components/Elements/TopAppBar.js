@@ -1,7 +1,7 @@
 import React from 'react'
 import { Menu, MenuItem, AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
-import withAuth from '../../withAuth';
+import withAuth from '../../Context/withAuth';
 
 function TopAppBar(props) {
     let classes = props.classes
@@ -21,6 +21,7 @@ function TopAppBar(props) {
           props.setLoginDetails({ loggedIn: false, userDetails: {} })
           localStorage.removeItem("token")
           break;
+        default:
       }
       setAnchorEl(null);
     };

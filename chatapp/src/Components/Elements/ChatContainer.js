@@ -1,5 +1,5 @@
 import React,{ useEffect } from 'react'
-import withAuth from '../../withAuth';
+import withAuth from '../../Context/withAuth';
 import ChatBubble from './ChatBubble';
 
 function ChatContainer(props) {
@@ -9,7 +9,7 @@ function ChatContainer(props) {
     return (
         <div style={{ marginBottom:78 }}>
             {
-              props.messages.map(message => <ChatBubble self={props.userDetails.username===message.from ? true : false } text={message.message} />)
+              props.messages.map(message => <ChatBubble self={props.userDetails.username===message.messageFrom ? true : false } text={message.message} />)
             }
         </div>
     )

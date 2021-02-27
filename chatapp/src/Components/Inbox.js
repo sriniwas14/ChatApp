@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { AccountCircle } from '@material-ui/icons';
-import withAuth from '../withAuth'
+import withAuth from '../Context/withAuth'
 import api from '../utils/api'
 
 const ChatItem = (props) => {

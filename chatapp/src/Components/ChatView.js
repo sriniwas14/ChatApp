@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  CssBaseline,
   IconButton,
   AppBar,
   Toolbar,
   Input,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import { MoveToInbox, Mail, Send } from "@material-ui/icons";
+import { Send } from "@material-ui/icons";
 import ChatContainer from "./Elements/ChatContainer";
 import getSocketInstance from "../utils/socket";
-import withAuth from "../withAuth";
+import withAuth from "../Context/withAuth";
+import api from "../utils/api";
 
 const drawerWidth = 350;
 
@@ -61,22 +61,25 @@ const useStyles = makeStyles((theme) => ({
 
 function ChatView(props) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
     
   const socket = getSocketInstance();
 
   const chatInput = useRef();
 
-  const toggleDrawerOpen = () => {
-    setOpen(!open);
-  };
-
   useEffect(() => {
     // Initiate Handshake
     socket.emit("handshake", {
       email: props.userDetails.username,
     });
+
+    // Fetch Messages
+    api.get(`/chats/${props.recepient.chatId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
+    .then(result => {
+      setMessages((messages) => [...result.data, ...messages])
+    }).catch(err => {
+      console.log("Couldn't Fetch Messages!")
+    })
 
     socket.on("chat message", (message) => {
       setMessages((messages) => [...messages, message]);
@@ -88,7 +91,7 @@ function ChatView(props) {
     let message = chatInput.current.value;
     const chatMessage = {
       chatId:props.recepient.chatId,
-      from: props.userDetails.username,
+      messageFrom: props.userDetails.username,
       recepientId: props.recepient.username,
       message: chatInput.current.value,
     };

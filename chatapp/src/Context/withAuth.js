@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthContext from './AuthConext'
+import AuthContext from './AuthContext'
 
 const withAuth = (Component) => {
     return (props) => {

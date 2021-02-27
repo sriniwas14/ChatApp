@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import {
-  CssBaseline
-} from "@material-ui/core";
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
-import TopAppBar from "./Elements/TopAppBar";
-import ChatView from './ChatView';
-import getSocketInstance from "../utils/socket";
-import withAuth from "../withAuth";
-import Inbox from "./Inbox";
+import ChatView from "./Components/ChatView";
+import TopAppBar from "./Components/Elements/TopAppBar";
+import Inbox from "./Components/Inbox";
+
 
 const drawerWidth = 350;
 
@@ -57,20 +58,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Dashboard(props) {
-  const classes = useStyles();
-  const [recepientDetails, setRecepientDetails] = useState({})
+export default function App() {
+    const classes = useStyles();
+    const [recepientDetails, setRecepientDetails] = useState({})
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <TopAppBar classes={classes} />
-      {
-        recepientDetails.chatId ? <ChatView recepient={recepientDetails} /> : (<Inbox setRecepient={setRecepientDetails} />)
-      }
-      
-    </div>
+    <Router>
+      <div>
+        <TopAppBar classes={classes} />
+
+        <Switch>
+          <Route path="/">
+            <Inbox setRecepient={setRecepientDetails} />
+          </Route>
+          <Route path="/chat">
+            <ChatView recepient={recepientDetails} />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
-
-export default withAuth(Dashboard);

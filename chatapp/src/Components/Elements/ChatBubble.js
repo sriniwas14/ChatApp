@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
     chatBubble: {
         background: '#e5e5e5',
         color: 'black',
-        borderRadius: 10,
         padding: 15,
         maxWidth: '75%',
         borderRadius: "10px 10px 10px 0px",
