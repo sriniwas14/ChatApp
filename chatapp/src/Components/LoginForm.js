@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { TextField, Link, Button, Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import api from "../utils/api";
+import Progress from "./Elements/Progress";
 
 export default function LoginForm(props) {
   const [wrongCredentialsSnackbarVisible, setWrongCredentialsSnackbarVisible] = useState(false)
   const [somethingWrongVisible, setSomethingWrongVisible] = useState(false)
   const [loginSuccessVisible, setLoginSuccessVisible] = useState(false)
+  const [requestLoaderVisible, setRequestLoaderVisible] = useState(false)
 
   const loginUser = (e) => {
     e.preventDefault()
@@ -16,22 +18,26 @@ export default function LoginForm(props) {
 
     if(username==="" || password==="") return
 
+    setRequestLoaderVisible(true)
+
     api
       .post("/users/login", {
         username,
         password,
       })
       .then((responce) => {
+        setRequestLoaderVisible(false)
         if (responce.data.success) {
           setLoginSuccessVisible(true)
           handleSuccess(responce.data.token)
         } else {
-          if (responce.data.err === "notexist") {
+          if (responce.data.err === "notexist" || responce.data.err === "mismatch") {
             setWrongCredentialsSnackbarVisible(true)
           }
         }
       })
       .catch((err) => {
+        setRequestLoaderVisible(false)
         setSomethingWrongVisible(true)
         console.log("Err ", err);
       });
@@ -122,6 +128,7 @@ export default function LoginForm(props) {
           Login Successful! 
         </Alert>
       </Snackbar>
+      <Progress open={requestLoaderVisible} />
     </div>
   );
 }
