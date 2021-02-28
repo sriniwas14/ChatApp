@@ -6,6 +6,13 @@ export let authCheck = (callback) => {
     if(token){
         const decodedToken = jwtDecode(token)
         decodedToken.token = token
+        const currentTimestamp = Math.ceil((new Date()).getTime()/1000)
+
+        if(decodedToken.exp<currentTimestamp){
+            callback(false)
+            return
+        }
+
         callback(true, decodedToken)
         return
     } else {
