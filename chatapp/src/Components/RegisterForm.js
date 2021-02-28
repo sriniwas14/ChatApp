@@ -1,13 +1,19 @@
 import React, { useState } from "react";
-import { TextField, Link, Button } from "@material-ui/core";
+import { TextField, Snackbar, Button } from "@material-ui/core";
+import { Alert } from '@material-ui/lab';
 import api from "../utils/api";
+import Progress from "./Elements/Progress";
 
 export default function RegisterForm(props) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [userExistsVisible, setUserExistsVisible] = useState(false)
+  const [somethingWrongVisible, setSomethingWrongVisible] = useState(false)
+  const [registrationSuccessfulVisible, setRegistrationSuccessfulVisible] = useState(false)
+  const [requestLoaderVisible, setrequestLoaderVisible] = useState(false)
 
   const registerUser = (e) => {
     e.preventDefault()
+    setrequestLoaderVisible(true)
+    
     api
       .post("/users/register", {
         username: e.target.email.value,
@@ -18,22 +24,31 @@ export default function RegisterForm(props) {
       })
       .then((responce) => {
         if (responce.data.success) {
-          alert("User Created!")
+          setRegistrationSuccessfulVisible(true)
+          handleSuccess()
         } else {
           if (responce.data.err === "exists") {
-            alert("User Exists");
+            setUserExistsVisible(true)
           }
         }
+        setrequestLoaderVisible(false)
       })
       .catch((err) => {
-        alert();
+        setrequestLoaderVisible(false)
+        setSomethingWrongVisible(true)
         console.log("Err ", err);
       });
   };
 
-  const handleSubmit = (e) => {
+  const handleSuccess = () => {
+    setTimeout(()=> {
+      props.setLogin("login");
+    }, 2200)
+  }
+
+  const handleGoBack = (e) => {
     e.preventDefault()
-    console.log("Submitted! ")
+    props.setLogin("login")
   }
 
   return (
@@ -135,8 +150,33 @@ export default function RegisterForm(props) {
         </Button>
       </div>
       <br />
-      <div></div>
-      <br />
+      <Button
+          disableElevation
+          fullWidth
+          type="submit"
+          variant="contained"
+          color="danger"
+          onClick={handleGoBack}
+        >
+          Go Back
+        </Button>
+
+      <Snackbar open={userExistsVisible} autoHideDuration={2000} onClose={() => setUserExistsVisible(false) }>
+        <Alert onClose={() => setUserExistsVisible(false) } severity="warning">
+          This email already has an Account
+        </Alert>
+      </Snackbar>
+      <Snackbar open={somethingWrongVisible} autoHideDuration={2000} onClose={() => setSomethingWrongVisible(false) }>
+        <Alert onClose={() => setSomethingWrongVisible(false) } severity="error">
+          Server Error!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={registrationSuccessfulVisible} autoHideDuration={2000} onClose={() => setRegistrationSuccessfulVisible(false) }>
+        <Alert onClose={() => setRegistrationSuccessfulVisible(false) } severity="success">
+          Registration Successful!
+        </Alert>
+      </Snackbar>
+      <Progress open={requestLoaderVisible} />
     </form>
   );
 }

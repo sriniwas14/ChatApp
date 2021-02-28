@@ -2,7 +2,6 @@ import { Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState } from "react";
 import LoginForm from "./LoginForm";
-import { StepsForm, Step } from "./Elements/StepsForm";
 import RegisterForm from "./RegisterForm";
 
 const useStyles = makeStyles((theme) => ({
@@ -10,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     textAlign: "center",
     position: "absolute",
+    display: "flex",
+    alignItems: "center",
     top: 0,
     bottom: 0,
     left: 0,
@@ -21,8 +22,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "center",
     color: theme.palette.text.secondary,
     paddingBottom: "40px !important",
-    borderRadius: 20,
-    marginTop: "10vh",
+    borderRadius: 20
   },
 }));
 
@@ -32,13 +32,13 @@ export default function Login(props) {
 
   return (
     <div className={classes.root}>
-      <Grid item md={4} style={{ margin: "auto" }}>
+      <Grid item md={4} style={{ flexGrow: 'inherit', margin: "auto" }}>
         <Paper elevation={0} className={classes.paper}>
           <div>
             <Typography
               color="primary"
               align="center"
-              style={{ marginTop: 50, marginBottom: 50, cursor: "default" }}
+              style={{ margin: loginView==="login" ? "50px 0" : "10px 0", cursor: "default" }}
               variant="h3"
               component="h3"
             >
@@ -51,7 +51,7 @@ export default function Login(props) {
               setLoginView={setLoginView}
             />
           ) : (
-            <RegisterForm />
+            <RegisterForm setLogin={setLoginView} />
           )}
         </Paper>
       </Grid>
