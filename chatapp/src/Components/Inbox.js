@@ -7,16 +7,8 @@ import { Avatar, Fab } from '@material-ui/core';
 import SearchDialog from './Elements/SearchDialog';
 
 const styles = {
-    chatItemName: {
-        fontSize: 18
-    },
     chatItemMessage: {
-        color: '#999999',
-        fontSize: 13
-    },
-    avatarLarge: {
-        height: 50,
-        width: 50
+        
     }
 }
 
@@ -39,14 +31,14 @@ const ChatItem = (props) => {
     }
 
     return (
-        <div onClick={()=> openChatView(props.recepient) } style={{ padding: 15, fontSize: 16, display: 'flex', cursor: 'default' }}>
-            <Avatar style={ styles.avatarLarge }>{props.recepient.username[0].toUpperCase()}</Avatar>
-            <div style={{ marginLeft: 10, marginTop: 'auto', marginBottom: 'auto' }}>
-                <div style={styles.chatItemName}>{ props.recepient.first_name+' '+props.recepient.last_name }</div>
-                <div style={styles.chatItemMessage}>{ props.recepient.message }</div>
+        <div onClick={()=> openChatView(props.recepient) } className="InboxChatItem">
+            <Avatar className="ChatAvatar">{props.recepient.username[0].toUpperCase()}</Avatar>
+            <div className="ChatItemLeftItems">
+                <div className="ChatItemName">{ props.recepient.first_name+' '+props.recepient.last_name }</div>
+                <div className="ChatItemMessage">{ props.recepient.message }</div>
             </div>
-            <div style={{ display: 'flex', marginLeft: 'auto' }}>
-                <div style={{ margin: 'auto' }}>{ getTime(props.recepient.sentAt) }</div>
+            <div className="ChatItemRightItems">
+                <div className="ChatItemTime">{ getTime(props.recepient.sentAt) }</div>
             </div>
         </div>
     )

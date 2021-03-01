@@ -1,6 +1,45 @@
 @import 'variables';
 
-
+.InboxChatItem {
+    padding: 15px;
+    font-size: 16px;
+    display: flex;
+    cursor: default;
+    transition: 0.1s ease-out;
+    user-select: none;
+    &:hover,&:active {
+        background-color: $hover-color;
+        transition: 0.1s ease-in;
+    }
+    &:hover:active {
+        background-color: $pressed-color;
+        transition: 0.1s ease-in;
+    }
+    
+    .ChatAvatar {
+        height: 50px;
+        width: 50px;
+    }
+    .ChatItemLeftItems {
+        margin-left: 10px;
+        margin-top: auto;
+        margin-bottom: auto;
+        .ChatItemName {
+            font-size: 18px
+        }
+        .ChatItemMessage {
+            color: #999999;
+            font-size: 13px;
+        }
+    }
+    .ChatItemRightItems {
+        display: flex;
+        margin-left: auto;
+        .ChatItemTime {
+            margin: auto
+        }
+    }
+}
 
 body {
     margin: 0;
