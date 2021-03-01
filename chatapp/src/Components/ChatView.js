@@ -74,7 +74,7 @@ function ChatView(props) {
     });
 
     // Fetch Messages
-    api.get(`/chats/${props.selectedChat.chatId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
+    api.get(`/chats/${props.selectedChat.roomId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
     .then(result => {
       setMessages((messages) => [...result.data, ...messages])
     }).catch(err => {
@@ -90,7 +90,7 @@ function ChatView(props) {
     e.preventDefault();
     let message = chatInput.current.value;
     const chatMessage = {
-      chatId:props.selectedChat.chatId,
+      chatId:props.selectedChat.roomId,
       messageFrom: props.userDetails.username,
       recepientId: props.selectedChat.username,
       message: chatInput.current.value,

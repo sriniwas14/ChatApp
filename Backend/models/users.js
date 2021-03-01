@@ -7,10 +7,10 @@ const saltRounds = 10;
 exports.getUsers = async (username, callback) => {
     let usernameQuery = ''
     if(username){
-        usernameQuery = ' WHERE username LIKE ?'
+        usernameQuery = ' WHERE username LIKE ? OR CONCAT(first_name," ", last_name) LIKE ?'
     }
 
-    var result = await runQuery(`SELECT users.username, user_details.first_name, user_details.last_name, user_details.first_name, user_details.profile_pic FROM users INNER JOIN user_details ON users.userId=user_details.userId ${usernameQuery} LIMIT 10`, [ username+'%' ])
+    var result = await runQuery(`SELECT users.username, user_details.first_name, user_details.last_name, user_details.first_name, user_details.profile_pic FROM users INNER JOIN user_details ON users.userId=user_details.userId ${usernameQuery} LIMIT 10`, [ username+'%', username+'%' ])
     if (result.length>0){
         callback(result)
     } else {
