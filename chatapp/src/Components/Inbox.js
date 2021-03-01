@@ -33,7 +33,7 @@ const ChatItem = (props) => {
     return (
         <div onClick={()=> openChatView(props.recepient) } className="InboxChatItem">
             <Avatar className="ChatAvatar">{props.recepient.username[0].toUpperCase()}</Avatar>
-            <div className="ChatItemLeftItems">
+            <div className={ `ChatItemLeftItems ${props.recepient.seen===0 ? "ChatItemLeftUnread" : ""}` }>
                 <div className="ChatItemName">{ props.recepient.first_name+' '+props.recepient.last_name }</div>
                 <div className="ChatItemMessage">{ props.recepient.message }</div>
             </div>

@@ -1,4 +1,4 @@
-const { startNewChat, saveMessage, chatConnectionExists } = require("./models/chat")
+const { startNewChat, saveMessage, chatConnectionExists, markAsSeen } = require("./models/chat")
 
 const sendMessage = (io, chatId, socketId, msg) => {
     if (socketId) {
@@ -49,5 +49,11 @@ exports.chatSocket = (app) => {
 
             
         });
+
+        socket.on('mark seen', msg => {
+            markAsSeen(msg.chatId, success => {
+                return
+            })
+        })
     })
 }

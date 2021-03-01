@@ -18,7 +18,7 @@ exports.startNewChat = async (data, callback) => {
 }
 
 exports.saveMessage = async (data) => {
-    let result = await runQuery(`INSERT INTO chat_messages VALUES(NULL, ?,?,?,CURRENT_TIMESTAMP())`, [ data.chatId, data.message, data.messageFrom ])
+    let result = await runQuery(`INSERT INTO chat_messages VALUES(NULL, ?,?,?,CURRENT_TIMESTAMP(), 0)`, [ data.chatId, data.message, data.messageFrom ])
 }
 
 exports.acceptChatRequest = async (username, callback) => {
@@ -31,7 +31,7 @@ exports.acceptChatRequest = async (username, callback) => {
 }
 
 exports.getAllChats = async (from, callback) => {
-    let result = await runQuery('SELECT p.roomId, ud.first_name, ud.last_name, ud.profile_pic, p.username, cm.message, cm.messageFrom, cm.sentAt FROM rooms as rm INNER JOIN participants as p ON rm.id=p.roomId INNER JOIN (SELECT * FROM `chat_messages` as cm1 WHERE cm1.sentAt=(SELECT MAX(cm2.sentAt) FROM chat_messages AS cm2 WHERE cm2.chatId=cm1.chatId) ORDER BY sentAt DESC) AS cm ON rm.id=cm.chatId INNER JOIN users AS u ON u.username=p.username INNER JOIN user_details AS ud ON ud.userId=u.userId WHERE rm.id IN (SELECT roomId FROM participants WHERE username=?) AND p.username!=? ORDER BY sentAt DESC', [from, from])
+    let result = await runQuery('SELECT p.roomId, ud.first_name, ud.last_name, ud.profile_pic, p.username, cm.message, cm.messageFrom, cm.sentAt, cm.seen FROM rooms as rm INNER JOIN participants as p ON rm.id=p.roomId INNER JOIN (SELECT * FROM `chat_messages` as cm1 WHERE cm1.sentAt=(SELECT MAX(cm2.sentAt) FROM chat_messages AS cm2 WHERE cm2.chatId=cm1.chatId) ORDER BY sentAt DESC) AS cm ON rm.id=cm.chatId INNER JOIN users AS u ON u.username=p.username INNER JOIN user_details AS ud ON ud.userId=u.userId WHERE rm.id IN (SELECT roomId FROM participants WHERE username=?) AND p.username!=? ORDER BY sentAt DESC', [from, from])
 
     if(result.length>0){
         callback(result)
@@ -68,4 +68,15 @@ exports.getChatMessages = async (chatId, username, callback) => {
         callback(false)
     }
     
+}
+
+
+exports.markAsSeen = async (chatId, callback)=> {
+    let result = await runQuery('UPDATE chat_messages SET seen=1 WHERE chatId=?', [chatId])
+
+    if(result.length>0){
+        callback(true)
+    } else {
+        callback(false)
+    }
 }

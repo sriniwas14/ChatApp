@@ -19,6 +19,7 @@
     .ChatAvatar {
         height: 50px;
         width: 50px;
+        background-color: #94b9ff !important;
     }
     .ChatItemLeftItems {
         margin-left: 10px;
@@ -38,6 +39,9 @@
         .ChatItemTime {
             margin: auto
         }
+    }
+    .ChatItemLeftUnread {
+        font-weight: bold !important;
     }
 }
 

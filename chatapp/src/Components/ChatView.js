@@ -81,9 +81,13 @@ function ChatView(props) {
       console.log("Couldn't Fetch Messages!", err)
     })
 
+    // Listen For Incoming Messages
     socket.on("chat message", (message) => {
       setMessages((messages) => [...messages, message]);
     });
+
+    // Mark Newest Message As Seen
+    socket.emit("mark seen", { chatId: props.selectedChat.roomId })
   }, []);
 
   let sendMessage = (e) => {
