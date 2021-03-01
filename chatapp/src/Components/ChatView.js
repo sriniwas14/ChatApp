@@ -68,11 +68,6 @@ function ChatView(props) {
   const chatInput = useRef();
 
   useEffect(() => {
-    // Initiate Handshake
-    socket.emit("handshake", {
-      email: props.userDetails.username,
-    });
-
     // Fetch Messages
     api.get(`/chats/${props.selectedChat.roomId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
     .then(result => {

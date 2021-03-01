@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Chat as ChatIcon } from '@material-ui/icons';
+import { Chat as ChatIcon, DoneAll } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import withAuth from '../Context/withData';
 import api from '../utils/api';
-import { Avatar, Fab } from '@material-ui/core';
+import { Avatar, Fab, Icon } from '@material-ui/core';
 import SearchDialog from './Elements/SearchDialog';
 
 const styles = {
@@ -35,7 +35,7 @@ const ChatItem = (props) => {
             <Avatar className="ChatAvatar">{props.recepient.username[0].toUpperCase()}</Avatar>
             <div className={ `ChatItemLeftItems ${props.recepient.seen===0 ? "ChatItemLeftUnread" : ""}` }>
                 <div className="ChatItemName">{ props.recepient.first_name+' '+props.recepient.last_name }</div>
-                <div className="ChatItemMessage">{ props.recepient.message }</div>
+                <div className="ChatItemMessage"><DoneAll style={{ fontSize: 16, marginBottom: -3, marginRight: 6 }} color={props.recepient.seen===1 ? "primary" : "default"} />{ props.recepient.message }</div>
             </div>
             <div className="ChatItemRightItems">
                 <div className="ChatItemTime">{ getTime(props.recepient.sentAt) }</div>

@@ -3,6 +3,7 @@ import Routes from './Routes';
 import Login from "./Components/Login";
 import { authCheck } from './utils/auth';
 import DataContext from './Context/DataContext';
+import getSocketInstance from "./utils/socket";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -10,14 +11,16 @@ function App() {
   const [selectedChat, setSelectedChat] = useState({})
 
   useEffect(() => {
-    authCheck((status, token) => {
+    authCheck((status, decodedToken) => {
       setLoading(false)
 
       if(status){
         setLoginDetails({
           loggedIn: true,
-          userDetails: token
+          userDetails: decodedToken
         })
+
+        getSocketInstance(decodedToken.username)
       }
     })
   }, [loading])
