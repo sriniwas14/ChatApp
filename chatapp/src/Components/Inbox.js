@@ -49,7 +49,6 @@ const Inbox = (props) => {
     }
 
     useEffect(() => {
-        console.log("CHATS ", chats)
         // Loading All Chats
         api.get(`/chats?from=${props.userDetails.username}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
         .then(res => setChats(res.data))
@@ -58,7 +57,6 @@ const Inbox = (props) => {
 
         // TODO: Listening For New Messages, New Chat Messages Should Update the Inbox
         socket.on("chat message", (message) => {
-            console.log("Received", message)
             setChats((c) => getUpdatedMessages(c, message))
         });
     }, [])

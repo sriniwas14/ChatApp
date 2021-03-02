@@ -5,8 +5,6 @@ import { makeStyles } from "@material-ui/core";
 import { useLocation, useHistory } from 'react-router-dom';
 import withData from '../../Context/withData';
 
-let drawerWidth = 200
-
 const useStyles = makeStyles((theme) => ({
     root: {
       display: "inline",
@@ -69,7 +67,7 @@ function TopAppBar(props) {
       switch(location.pathname){
         case '/chat':
           setBackButtonVisible(true)
-          setTitle(props.selectedChat.username)
+          setTitle(`${props.selectedChat.first_name} ${props.selectedChat.last_name}`)
           break;     
         default:
           setBackButtonVisible(false)
