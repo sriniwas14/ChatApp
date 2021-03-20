@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Dialog, TextField } from '@material-ui/core'
+import { useHistory } from 'react-router-dom';
 import api from '../../utils/api'
 import withData from '../../Context/withData'
 import { Avatar } from '@material-ui/core';
@@ -20,13 +21,22 @@ const styles = {
 }
 
 function SearchDialog(props) {
-    const [users, setUsers] = useState([]                                                                   )
+    const history = useHistory();
+    const [users, setUsers] = useState([])
+    
+    const openChatView = (recepient) => {
+        props.setRecepient(recepient)
+        history.push('/chat')
+    }
 
     const searchHandler = (e) => {                                                          
         const searchQuery = e.target.value
-        if(searchQuery.length<3) return
+        if(searchQuery.length<3){
+            setUsers([])
+            return
+        }
 
-        api.get(`/users?search=${ searchQuery }`, { headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
+        api.get(`/users?disconnected=true&search=${ searchQuery }`, { headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
         .then(result => {
             if(result.data==false) {
                 setUsers([])
@@ -46,7 +56,7 @@ function SearchDialog(props) {
 
                 {
                     users.map(user => (
-                        <div style={{ display: 'flex' }}>
+                        <div onClick={() => openChatView(user)} className="searchDialogUserItem" style={{ display: 'flex' }}>
                             <Avatar style={ styles.avatarLarge }>{user.username[0].toUpperCase()}</Avatar>
                             <div style={{ marginLeft: 10, marginTop: 'auto', marginBottom: 'auto' }}>
                                 <div style={ styles.chatItemName }>{ `${user.first_name} ${user.last_name}` }</div>

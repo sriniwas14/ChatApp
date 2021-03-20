@@ -66,8 +66,10 @@ function ChatView(props) {
   const socket = getSocketInstance();
 
   const chatInput = useRef();
-
+  
+  // Execute when roomId is present in selectedChat 
   useEffect(() => {
+    if (!props.selectedChat.roomId) return
     // Fetch Messages
     api.get(`/chats/${props.selectedChat.roomId}`,{ headers: { "Authorization": `Bearer ${props.userDetails.token}`} })
     .then(result => {
@@ -85,6 +87,13 @@ function ChatView(props) {
     // Mark Newest Message As Seen
     socket.emit("mark seen", { chatId: props.selectedChat.roomId })
   }, []);
+  
+  // Execute when `roomId` is NOT present
+  // instead use the username to create a new chat request when the first message is sent
+  // Finally set the result of the new chat to set the `selectedChat` in the context 
+  useEffect(() => {
+    
+  })
 
   let sendMessage = (e) => {
     e.preventDefault();

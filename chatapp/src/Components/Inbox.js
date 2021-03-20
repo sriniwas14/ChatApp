@@ -70,7 +70,7 @@ const Inbox = (props) => {
             <Fab onClick={() => setSearchDialogOpen(true) } color="primary" style={{ position: 'fixed', bottom: 20, right: 20 }} aria-label="add">
                 <ChatIcon />
             </Fab>
-            <SearchDialog open={searchDialogOpen} setOpen={setSearchDialogOpen} />
+            <SearchDialog open={searchDialogOpen} setRecepient={props.setSelectedChat} setOpen={setSearchDialogOpen} />
             </div>
         </div>
     )
