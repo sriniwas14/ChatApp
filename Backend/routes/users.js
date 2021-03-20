@@ -1,11 +1,19 @@
-const { registerUser, getUsers, loginUser, isValidUser, resetPassword } = require('../models/users');
+const { registerUser, getUsers, getDisconnectedUsers, loginUser, isValidUser, resetPassword } = require('../models/users');
 const { sendMail } = require('../utils/mail');
 const { signKey, verifyKey } = require('../utils/tokens');
 
 const userRoutes = require('express').Router();
 
 userRoutes.get('/', (req, res)=> {
-    getUsers(req.query['search'], (result) => {
+    const searchQuery = req.query['search']!==undefined ? req.query['search'] : ""
+
+    if (req.query.disconnected==='true'){
+        getDisconnectedUsers(searchQuery, req.token.username, (result) => {
+            res.send(result)
+        });
+        return
+    }
+    getUsers(searchQuery, (result) => {
         res.send(result)
     });
 });
@@ -27,7 +35,7 @@ userRoutes.post('/forgotpassword', (req, res) => {
     let username = req.body.username
     isValidUser(username, (result) => {
         if(result) {
-            let resetLink = process.env.SITE_URL+"reset_password"+signKey({ username }, "1h")
+            let resetLink = process.env.SITE_URL+"/reset_password"+signKey({ username }, "1h")
             sendMail(resetLink, username, (success) => {
                 res.send({ success })
             })

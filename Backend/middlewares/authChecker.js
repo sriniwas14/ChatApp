@@ -18,7 +18,9 @@ exports.authChecker = (req, res, next) => {
     }
     const token = getAuthToken(req)
     if(!token){ 
-        res.status(401).send()
+        res.status(401).json({
+            err: "invalid token"
+        })
         return
     }  
     const decodedToken = verifyKey(token) 
@@ -26,6 +28,8 @@ exports.authChecker = (req, res, next) => {
         req.token = decodedToken
         next()
     } else {
-        res.status(401).send()
+        res.status(401).json({
+            err: "expired token"
+        })
     }    
 }

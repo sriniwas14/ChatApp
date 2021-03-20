@@ -2,6 +2,7 @@ const { connection, runQuery } = require('../utils/database');
 const { signKey, verifyKey } = require('../utils/tokens')
 const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
+const { search } = require('../routes/users');
 const saltRounds = 10;
 
 exports.getUsers = async (username, callback) => {
@@ -11,6 +12,21 @@ exports.getUsers = async (username, callback) => {
     }
 
     var result = await runQuery(`SELECT users.username, user_details.first_name, user_details.last_name, user_details.first_name, user_details.profile_pic FROM users INNER JOIN user_details ON users.userId=user_details.userId ${usernameQuery} LIMIT 10`, [ username+'%', username+'%' ])
+    if (result.length>0){
+        callback(result)
+    } else {
+        callback(false)
+    }
+}
+
+exports.getDisconnectedUsers = async (query, username, callback) => {
+    let searchQuery = ''
+
+    if(query){
+        searchQuery = "(ud.first_name LIKE ? OR ud.last_name LIKE ?) AND"
+    }
+
+    var result = await runQuery(`SELECT u.username, ud.first_name, ud.last_name, ud.nickname, ud.phone FROM users u INNER JOIN user_details ud ON u.userId=ud.userId WHERE ${searchQuery} u.username NOT IN (SELECT username FROM participants WHERE roomId IN (SELECT roomId FROM participants WHERE username="sriniwasx@gmail.com"))`, [query+"%",query+"%",username])
     if (result.length>0){
         callback(result)
     } else {
