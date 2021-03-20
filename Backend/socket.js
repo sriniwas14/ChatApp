@@ -30,20 +30,22 @@ exports.chatSocket = (app) => {
         // Send and Receive Messages 
         socket.on('send message', (msg) => {
             const socketId = connections[msg.recepientId]
+            console.log("A")
 
             // Get Chat Id 
-            chatConnectionExists([msg.from, msg.recepientId], (success )=> {
+            chatConnectionExists([msg.messageFrom, msg.recepientId], (success )=> {
                 // On Failure Create New Chat
                 if(!success){
                     startNewChat({
-                        participants: { to: msg.recepientId, from: msg.from },
+                        participants: { to: msg.recepientId, from: msg.messageFrom },
                         accepted: false
-                    }, (success, chatId) => { 
+                    }, (success, chatId) => {
                         if(success)
                             sendMessage(io, chatId, socketId, msg)
                     })
                     return
                 }
+                console.log("E")
                 sendMessage(io, msg.chatId, socketId, msg)
             })
 

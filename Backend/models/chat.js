@@ -43,7 +43,8 @@ exports.getAllChats = async (from, callback) => {
 exports.chatConnectionExists = async (users, callback)=> {
     let result = await runQuery('SELECT COUNT(*) as participantCount FROM `participants` WHERE username=? OR username=? GROUP BY roomId ORDER BY participantCount DESC LIMIT 1', [users[0], users[1]])
 
-    if(result.length>0){
+    console.log("DS ", result)
+    if(result.participantCount>1){
         callback(true)
     } else {
         callback(false)
