@@ -68,7 +68,11 @@ function TopAppBar(props) {
         case '/chat':
           setBackButtonVisible(true)
           setTitle(`${props.selectedChat.first_name} ${props.selectedChat.last_name}`)
-          break;     
+          break;
+        case '/profile':
+          setBackButtonVisible(true)
+          setTitle(`${props.userDetails.first_name}'s Profile`)
+          break;
         default:
           setBackButtonVisible(false)
           setTitle("Inbox")
@@ -78,6 +82,7 @@ function TopAppBar(props) {
     const handleClose = (e) => {
       switch(e.target.innerText){
         case "Profile": 
+          history.push('/profile')
           break;
         case "Log Out":
           props.setLoginDetails({ loggedIn: false, userDetails: {} })
