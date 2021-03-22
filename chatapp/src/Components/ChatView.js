@@ -93,6 +93,26 @@ function ChatView(props) {
   // instead use the username to create a new chat request when the first message is sent
   // Finally set the result of the new chat to set the `selectedChat` in the context 
   useEffect(() => {
+    if (props.selectedChat.roomId) return
+
+    socket.on("chat request", (message) => {
+      console.log("New Request ", message)
+      message.message = "New Request!"
+      message.seen = 0
+      message.sentAt = (new Date()).toISOString()
+      message.username = props.selectedChat.username
+      props.setSelectedChat(message)
+    });
+
+    // Listen For Incoming Messages
+    socket.on("chat message", (message) => {
+      console.log("New Message ", message)
+      setMessages((messages) => [...messages, message]);
+      socket.emit("mark seen", { chatId: props.selectedChat.roomId })
+    });
+
+    // Mark Newest Message As Seen
+    socket.emit("mark seen", { chatId: props.selectedChat.roomId })
      
   }, [])
 
