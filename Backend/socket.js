@@ -1,6 +1,7 @@
 const { startNewChat, saveMessage, chatConnectionExists, markAsSeen } = require("./models/chat")
 
 const sendMessage = (io, chatId, socketId, msg) => {
+    console.log("A ", chatId, socketId, msg)
     if (socketId) {
         // Send Message to `recepient`
         io.to(socketId).emit('chat message', msg)
@@ -30,8 +31,7 @@ exports.chatSocket = (app) => {
         // Send and Receive Messages 
         socket.on('send message', (msg) => {
             const socketId = connections[msg.recepientId]
-            console.log("A")
-
+            console.log("Socket ID", socketId)
             // Get Chat Id 
             chatConnectionExists([msg.messageFrom, msg.recepientId], (success )=> {
                 // On Failure Create New Chat
@@ -45,7 +45,6 @@ exports.chatSocket = (app) => {
                     })
                     return
                 }
-                console.log("E")
                 sendMessage(io, msg.chatId, socketId, msg)
             })
 

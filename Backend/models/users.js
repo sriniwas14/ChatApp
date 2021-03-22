@@ -21,12 +21,14 @@ exports.getUsers = async (username, callback) => {
 
 exports.getDisconnectedUsers = async (query, username, callback) => {
     let searchQuery = ''
+    let queryParameters = [username,username]
 
     if(query){
         searchQuery = "(ud.first_name LIKE ? OR ud.last_name LIKE ?) AND"
+        queryParameters.unshift(query+"%",query+"%")
     }
 
-    var result = await runQuery(`SELECT u.username, ud.first_name, ud.last_name, ud.nickname, ud.phone FROM users u INNER JOIN user_details ud ON u.userId=ud.userId WHERE ${searchQuery} u.username NOT IN (SELECT username FROM participants WHERE roomId IN (SELECT roomId FROM participants WHERE username="sriniwasx@gmail.com"))`, [query+"%",query+"%",username])
+    var result = await runQuery(`SELECT u.username, ud.first_name, ud.last_name, ud.nickname, ud.phone FROM users u INNER JOIN user_details ud ON u.userId=ud.userId WHERE ${searchQuery} u.username NOT IN (SELECT username FROM participants WHERE roomId IN (SELECT roomId FROM participants WHERE username=?)) AND username!=?`, queryParameters)
     if (result.length>0){
         callback(result)
     } else {
