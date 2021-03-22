@@ -1,3 +1,5 @@
+>>> Features
+
 # Implement New Chat Request
 	(Y) Search for Users Where a Chat doesn't exists
 	(Y) Clicking on that should bring up the Chat View
@@ -10,5 +12,11 @@
 	(N) Where a user can upload their profile picture
 	(N) View and edit user details such as name and date of birth
 
-# Misc
-	(N) Hide the tick mark if message is from the other user
+# Misc 
+
+>>> BUGS
+ # (IP) Can't send message requests from new Accounts
+	- 
+
+ # Chat Request Can't receive message from the target user
+ # Hide the tick mark if message is from the other user

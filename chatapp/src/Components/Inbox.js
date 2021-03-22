@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Chat as ChatIcon, DoneAll } from '@material-ui/icons';
+import { Chat as ChatIcon, DoneAll, AllInboxOutlined } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 import withAuth from '../Context/withData';
 import api from '../utils/api';
@@ -55,17 +55,33 @@ const Inbox = (props) => {
         .catch(err => console.log(err)
         )
 
-        // TODO: Listening For New Messages, New Chat Messages Should Update the Inbox
+        // Getting and Updating the Chat Messages
         socket.on("chat message", (message) => {
             setChats((c) => getUpdatedMessages(c, message))
         });
+
+        socket.on("chat request", (room) => {
+            room.message = "New Request!"
+            room.seen = 0
+            room.sentAt = (new Date()).toISOString()
+            setChats((c) => [room, ...c])
+        })
     }, [])
 
     return (
         <div>
             <div style={{ display: "block" }}>
+            
             {
+                (chats) ?
                 chats.map(chat => <ChatItem key={chat.chatId} recepient={chat} username={props.userDetails.username} setRecepient={props.setSelectedChat} />)
+                : (
+                <div style={{ position: "absolute", left: "50%", opacity: 0.6, top: "50%" }}>
+                    <div style={{ transform: "translateX(-50%) translateY(-50%)", textAlign: "center" }}>
+                        <AllInboxOutlined fontSize="large" />
+                        <p style={{ cursor: "default" }}>You have no Messages</p>
+                    </div>
+                </div>)
             }
             <Fab onClick={() => setSearchDialogOpen(true) } color="primary" style={{ position: 'fixed', bottom: 20, right: 20 }} aria-label="add">
                 <ChatIcon />

@@ -19,6 +19,15 @@ exports.getUsers = async (username, callback) => {
     }
 }
 
+exports.getUserDetails = async (username, callback) => {
+    var result = await runQuery(`SELECT u.username,ud.* FROM users u INNER JOIN user_details ud ON u.userId=ud.userId WHERE username=?`, [ username ])
+    if (result.length>0){
+        callback(result)
+    } else {
+        callback(false)
+    }
+}
+
 exports.getDisconnectedUsers = async (query, username, callback) => {
     let searchQuery = ''
     let queryParameters = [username,username]

@@ -80,6 +80,7 @@ function ChatView(props) {
 
     // Listen For Incoming Messages
     socket.on("chat message", (message) => {
+      console.log("New Message ", message)
       setMessages((messages) => [...messages, message]);
       socket.emit("mark seen", { chatId: props.selectedChat.roomId })
     });
@@ -92,8 +93,8 @@ function ChatView(props) {
   // instead use the username to create a new chat request when the first message is sent
   // Finally set the result of the new chat to set the `selectedChat` in the context 
   useEffect(() => {
-    
-  })
+     
+  }, [])
 
   let sendMessage = (e) => {
     e.preventDefault();

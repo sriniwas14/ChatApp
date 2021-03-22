@@ -1,7 +1,7 @@
-const { startNewChat, saveMessage, chatConnectionExists, markAsSeen } = require("./models/chat")
+const { startNewChat, saveMessage, chatConnectionExists, markAsSeen, getSingleChat } = require("./models/chat")
+const { getUserDetails } = require("./models/users")
 
 const sendMessage = (io, chatId, socketId, msg) => {
-    console.log("A ", chatId, socketId, msg)
     if (socketId) {
         // Send Message to `recepient`
         io.to(socketId).emit('chat message', msg)
@@ -10,6 +10,15 @@ const sendMessage = (io, chatId, socketId, msg) => {
         chatId,
         message: msg.message,
         messageFrom: msg.messageFrom,  
+    })
+}
+
+const sendRequestStatus = async (io, messageFrom, senderSocketId, recepientSocketId, chatId) => {
+    let result = await getUserDetails(messageFrom, result => {
+        if (senderSocketId && recepientSocketId && result.length>0){
+            result[0].roomId = chatId
+            io.to(senderSocketId).to(recepientSocketId).emit('chat request', result[0])
+        }
     })
 }
 
@@ -31,7 +40,6 @@ exports.chatSocket = (app) => {
         // Send and Receive Messages 
         socket.on('send message', (msg) => {
             const socketId = connections[msg.recepientId]
-            console.log("Socket ID", socketId)
             // Get Chat Id 
             chatConnectionExists([msg.messageFrom, msg.recepientId], (success )=> {
                 // On Failure Create New Chat
@@ -40,8 +48,11 @@ exports.chatSocket = (app) => {
                         participants: { to: msg.recepientId, from: msg.messageFrom },
                         accepted: false
                     }, (success, chatId) => {
-                        if(success)
+                        if(success){
+                            const socketIdOfSender = connections[msg.messageFrom]
+                            sendRequestStatus(io, msg.messageFrom, socketIdOfSender, socketId, chatId)
                             sendMessage(io, chatId, socketId, msg)
+                        }
                     })
                     return
                 }

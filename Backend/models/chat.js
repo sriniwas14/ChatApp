@@ -40,6 +40,16 @@ exports.getAllChats = async (from, callback) => {
     }
 }
 
+exports.getSingleChat = async (from, callback) => {
+    let result = await runQuery('SELECT p.roomid, ud.first_name, ud.last_name, ud.profile_pic, p.username FROM rooms AS rm INNER JOIN participants AS p ON rm.id = p.roomid INNER JOIN users AS u ON u.username = p.username INNER JOIN user_details AS ud ON ud.userid = u.userid WHERE rm.id IN (SELECT roomid FROM participants WHERE username = ?) AND p.username != ? LIMIT 1 ', [from, from])
+
+    if(result.length>0){
+        callback(result)
+    } else {
+        callback(false)
+    }
+}
+
 exports.chatConnectionExists = async (users, callback)=> {
     let result = await runQuery('SELECT COUNT(*) as participantCount FROM `participants` WHERE username=? OR username=? GROUP BY roomId ORDER BY participantCount DESC LIMIT 1', [users[0], users[1]])
 
