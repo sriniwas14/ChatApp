@@ -12,7 +12,7 @@ import Profile from "./Components/Profile";
 export default function App() {
 
   return (
-    <Router basename={"/chatapp"}>
+    <Router>
       <div>
         <TopAppBar />
         <div style={{ marginTop: 64 }}>
