@@ -59,7 +59,7 @@ exports.registerUser = (body, callback) => {
             if(res.length!==0){
                 callback({ success: false, err: "exists"  })
             } else {
-                connection.query(`INSERT INTO users VALUES(?,?,?); INSERT INTO user_details VALUES(?,?,?,?,?,?,?,?,?);`,[
+                connection.query(`INSERT INTO users VALUES(?,?,?); INSERT INTO user_details VALUES(NULL,?,?,?,?,?,?,?,?,?);`,[
                     userId,
                     body.username,
                     passwordHash,
